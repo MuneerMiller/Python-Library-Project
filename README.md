@@ -50,7 +50,7 @@ A command-line interface (CLI) application to manage a library system using **Py
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/MuneerMiller/Python-Library-Project.git
    cd LibraryManagementSystem
 2. **Install dependencies**:
    ```bash
