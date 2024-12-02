@@ -69,7 +69,7 @@ A command-line interface (CLI) application to manage a library system using **Py
 2. **Use the menu to navigate between options**:
    - Enter the number corresponding to the desired action.
 
-### Example Workdlows
+### Example Workflows
 
 **Add a book**
 - Select option 1.
