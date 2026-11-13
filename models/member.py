@@ -1,24 +1,25 @@
-import sqlite3  # Ensure sqlite3 is imported
+import sqlite3
+
+from database.connection import get_connection
+from models.errors import LibraryError
+from utils.helpers import is_valid_email
+
 
 def add_member(name, email):
-    with sqlite3.connect("library.db") as conn:
-        cursor = conn.cursor()
-        try:
-            # Check if the email already exists
-            cursor.execute("SELECT id FROM Members WHERE email = ?", (email,))
-            if cursor.fetchone():
-                return False, f"Error: A member with the email '{email}' is already registered."
-            # Insert new member
-            cursor.execute("INSERT INTO Members (name, email) VALUES (?, ?)", (name, email))
-            conn.commit()
-            return True, "Member registered successfully!"
-        except sqlite3.Error as e:
-            return False, f"Database error: {str(e)}"
-
+    """Register a member and return their new ID."""
+    name, email = name.strip(), email.strip().lower()
+    if not name:
+        raise LibraryError("A member needs a name.")
+    if not is_valid_email(email):
+        raise LibraryError(f"'{email}' doesn't look like an email address.")
+    try:
+        with get_connection() as conn:
+            cursor = conn.execute("INSERT INTO Members (name, email) VALUES (?, ?)", (name, email))
+            return cursor.lastrowid
+    except sqlite3.IntegrityError:
+        raise LibraryError(f"A member with the email '{email}' is already registered.") from None
 
 
 def list_members():
-    with sqlite3.connect("library.db") as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Members")
-        return cursor.fetchall()
+    with get_connection() as conn:
+        return conn.execute("SELECT id, name, email FROM Members ORDER BY name").fetchall()

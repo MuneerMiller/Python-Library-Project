@@ -1,125 +1,106 @@
-
 # Library Management System
 
-A command-line interface (CLI) application to manage a library system using **Python** and **SQLite**. The system allows users to perform tasks like adding books, registering members, borrowing/returning books, and listing books and members in a structured, user-friendly table format.
+A command-line app for running a small library, written in **Python** with an **SQLite** database. Librarians can add books, register members, lend and return books, see what's out and search the catalogue, all from a simple numbered menu with tidy tables.
 
----
+![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-unittest-2E7D32)
 
-## Table of Contents
-
-1. [Features](#features)
-2. [Installation](#installation)
-   - [Prerequisites](#prerequisites)
-   - [Setup Instructions](#setup-instructions)
-3. [Usage](#usage)
-   - [Example Workflows](#example-workflows)
-4. [Project Structure](#project-structure)
-5. [Known Issues & Limitations](#known-issues--limitations)
-6. [Future Enhancements](#future-enhancements)
-
----
+```
++------+--------------------------+---------------+-----------+
+|   ID | Title                    | Author        | Status    |
++======+==========================+===============+===========+
+|    2 | Cry, the Beloved Country | Alan Paton    | Available |
++------+--------------------------+---------------+-----------+
+|    1 | Things Fall Apart        | Chinua Achebe | Borrowed  |
++------+--------------------------+---------------+-----------+
+```
 
 ## Features
 
-1. **Add a Book**:
-   - Add a book to the library database with its title and author.
-2. **Register a Member**:
-   - Register library members by entering their name and email.
-3. **Borrow a Book**:
-   - Borrow a book by providing the book ID and member ID, ensuring only available books can be borrowed.
-4. **Return a Book**:
-   - Return a borrowed book to make it available again.
-5. **List All Books**:
-   - Display all books in a clean, table format with their title and author.
-6. **List Registered Members**:
-   - Display all registered members in a table format with their name and email.
-7. **Exit**:
-   - Exit the application gracefully.
+| Option | What it does |
+| --- | --- |
+| **1. Add a book** | Adds a title and author, and shows the new book's ID |
+| **2. Register a member** | Saves a name and email. Emails are checked and must be unique |
+| **3. Borrow a book** | Lends a book to a member by their IDs, if the book is available |
+| **4. Return a book** | Marks a borrowed book as returned |
+| **5. List all books** | Shows every book with its ID and whether it's available or borrowed |
+| **6. List registered members** | Shows every member with their ID and email |
+| **7. List borrowed books** | Shows what's out, who has it and since when |
+| **8. Search books** | Finds books by any part of the title or author |
+| **0. Exit** | Closes the app (Ctrl+C works too) |
 
----
+Mistakes get a clear message instead of a crash: an unknown ID, a book that's already out, returning a book that isn't borrowed, a duplicate or invalid email, or a blank title.
 
-## Installation
+## Getting started
 
-### Prerequisites
-
-- Python 3.6 or higher
-- SQLite (Python’s built-in library is sufficient)
-- `tabulate` Python library (for clean table display)
-
-### Setup Instructions
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/MuneerMiller/Python-Library-Project.git
-2. **Install dependencies**:
-   ```bash
-   pip install tabulate
-3. **Initialize the database**: Run the script to create the required tables
-   ```bash
-   python init_db.py
-4. **Run the application**:
-   ```bash
-   python main.py
-## Usage
-
-1. **Launch the program**:
-   ```bash
-   python main.py
-2. **Use the menu to navigate between options**:
-   - Enter the number corresponding to the desired action.
-
-### Example Workflows
-
-**Add a book**
-- Select option 1.
-- Enter the book title and author.
-- The book will be added to the library.
-
-**Borrow a Book**
-- Select option 3.
-- Enter a valid book ID and member ID.
-- The book will be marked as borrowed.
-
-**List All Books**
-- Select option 5.
-- See a table of all books, including their titles and authors.
-- List Registered Members
-- Select option 6.
-- View a table of all registered members with their names and emails.
-
-## Project Structure
+You need Python 3.8 or newer.
 
 ```bash
-LibraryManagementSystem/
-│
-├── main.py                  # Entry point of the application
-├── init_db.py               # Script to initialize the SQLite database
-├── database/
-│   ├── connection.py        # Handles SQLite database connections
-│   ├── setup.sql            # (Optional) SQL script for database schema
-│
-├── models/
-│   ├── book.py              # Book-related operations (add, list books)
-│   ├── member.py            # Member-related operations (add, list members)
-│   ├── borrowing.py         # Borrowing-related operations (borrow, return books)
-│
-├── utils/
-│   ├── helpers.py           # Helper functions (e.g., input sanitization)
-│   ├── config.py            # Configuration (e.g., database name)
-│
-└── README.md                # Documentation
+git clone https://github.com/MuneerMiller/Python-Library-Project.git
 ```
 
-## Known Issues & Limitations
+```bash
+cd Python-Library-Project
+```
 
-- Non-numeric Input: Borrowing/returning books requires numeric IDs; invalid inputs result in errors.
-- Member Deletion: Deleting members or books is not supported yet.
-- Overdue Books: Currently, there’s no functionality to track overdue books or calculate fines.
+```bash
+pip install -r requirements.txt
+```
 
-## Future Enhancements
+```bash
+python main.py
+```
 
-- Add functionality to handle overdue books and calculate fines.
-- Implement a search feature for books and members.
-- Enhance borrowing/returning to allow specifying due dates.
-- Support multiple copies of the same book.
-- Add admin authentication for restricted actions.
+The app creates `library.db` the first time it runs. You can also create it on its own with `python init_db.py`. To keep the database somewhere else, set `LIBRARY_DB` to a file path before running.
+
+## Running the tests
+
+```bash
+python -m unittest -v
+```
+
+The tests give each case its own temporary database. They cover adding and searching books, member validation, and the borrowing rules.
+
+## How it's built
+
+```
+Python-Library-Project/
+├── main.py              # Menu and user input
+├── init_db.py           # Creates the tables from database/setup.sql
+├── database/
+│   ├── connection.py    # Opens SQLite, commits or rolls back, and closes
+│   └── setup.sql        # Schema: Books, Members and Borrowings
+├── models/
+│   ├── book.py          # Add, list and search books
+│   ├── member.py        # Register and list members
+│   ├── borrowing.py     # Borrow, return and list borrowed books
+│   └── errors.py        # LibraryError for problems the user can fix
+├── utils/
+│   ├── config.py        # Database location
+│   └── helpers.py       # Input and email helpers
+└── tests/
+    └── test_library.py  # unittest suite
+```
+
+Some design choices:
+
+- **Parameterised SQL everywhere**, so input such as `'; DROP TABLE Books; --` is stored as text, never run.
+- **One connection helper** commits when everything works and rolls back when something fails, so a half-finished loan can't leave a book marked as out.
+- **Foreign keys are switched on**, so a loan can't point at a book or member that doesn't exist.
+- **The menu and the data layer are separate.** `models/` never prints or asks for input, which is what makes it easy to test.
+
+## Ideas for next steps
+
+- Due dates, overdue lists and fines
+- Several copies of the same book
+- Editing and removing books and members
+- A web front end on top of the same `models/` code
+
+## Licence
+
+Copyright © 2026 Mogamat Muneer Miller. All rights reserved. The code is public so you can read it and learn from it, but it is not open source. See [LICENSE](LICENSE).
+
+## Contact
+
+Built by **[Muneer Miller](https://github.com/MuneerMiller)** · [muneermiller.github.io](https://muneermiller.github.io/)
