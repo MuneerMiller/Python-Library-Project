@@ -2,9 +2,9 @@
 
 A command-line app for running a small library, written in **Python** with an **SQLite** database. Librarians can add books, register members, lend and return books, see what's out and search the catalogue, all from a simple numbered menu with tidy tables.
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-unittest-2E7D32)
+[![Tests](https://github.com/MuneerMiller/Python-Library-Project/actions/workflows/tests.yml/badge.svg)](https://github.com/MuneerMiller/Python-Library-Project/actions/workflows/tests.yml)
 
 ```
 +------+--------------------------+---------------+-----------+
@@ -34,7 +34,7 @@ Mistakes get a clear message instead of a crash: an unknown ID, a book that's al
 
 ## Getting started
 
-You need Python 3.8 or newer.
+You need Python 3.10 or newer.
 
 ```bash
 git clone https://github.com/MuneerMiller/Python-Library-Project.git
@@ -60,7 +60,7 @@ The app creates `library.db` the first time it runs. You can also create it on i
 python -m unittest -v
 ```
 
-The tests give each case its own temporary database. They cover adding and searching books, member validation, and the borrowing rules.
+The tests give each case its own temporary database. They cover adding and searching books, member validation, and the borrowing rules. GitHub Actions runs them on Python 3.10 and 3.13 for every push and pull request.
 
 ## How it's built
 
